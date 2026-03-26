@@ -29,46 +29,44 @@ const SignIn: FC = () => {
 	};
 
 	return (
-		<Block $height="100%" $column $alignItems="center" $justifyContent="center">
-			<AuthContainer
-				title="Sign in to Mecware"
-				buttonText="Sign In"
-				buttonIcon={<Icon.Login />}
-				onSubmit={submitHandler}
-				errorMessage={errorMessage}
-				extra={
-					<Body.S>
-						First time here? <Link to="/signup">Create an account</Link>
-					</Body.S>
-				}
-			>
-				<Flex $column $gap={16}>
+		<AuthContainer
+			title="Sign in to Mecware"
+			buttonText="Sign In"
+			buttonIcon={<Icon.Login />}
+			onSubmit={submitHandler}
+			errorMessage={errorMessage}
+			extra={
+				<Body.S>
+					First time here? <Link to="/signup">Create an account</Link>
+				</Body.S>
+			}
+		>
+			<Flex $column $gap={16}>
+				<Input
+					hasError={errorMessage.length !== 0 && login.value.length === 0}
+					value={login.value}
+					onChange={login.onChange}
+					icon={Icon.User}
+					placeholder="Username or email address"
+				/>
+				<Block $relative>
 					<Input
-						hasError={errorMessage.length !== 0 && login.value.length === 0}
-						value={login.value}
-						onChange={login.onChange}
-						icon={Icon.User}
-						placeholder="Username or email address"
+						hasError={errorMessage.length !== 0 && password.value.length === 0}
+						type="password"
+						value={password.value}
+						onChange={password.onChange}
+						icon={Icon.Lock}
+						placeholder="Password"
+						canTogglePassword
 					/>
-					<Block $relative>
-						<Input
-							hasError={errorMessage.length !== 0 && password.value.length === 0}
-							type="password"
-							value={password.value}
-							onChange={password.onChange}
-							icon={Icon.Lock}
-							placeholder="Password"
-							canTogglePassword
-						/>
-						<PasswordRecoverLink>
-							<Link size="S" to="/recover">
-								Forgot password?
-							</Link>
-						</PasswordRecoverLink>
-					</Block>
-				</Flex>
-			</AuthContainer>
-		</Block>
+					<PasswordRecoverLink>
+						<Link size="S" to="/recover">
+							Forgot password?
+						</Link>
+					</PasswordRecoverLink>
+				</Block>
+			</Flex>
+		</AuthContainer>
 	);
 };
 

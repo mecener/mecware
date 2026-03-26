@@ -11,8 +11,8 @@ const MainLayout: FC = () => {
 	};
 
 	return (
-		<Block $height="100vh" $column $padding={48}>
-			<m.div style={{ height: "100%" }} {...transitions}>
+		<Block $minHeight="100vh" $justifyContent="center" $column $padding={48}>
+			<m.div {...transitions}>
 				<Outlet />
 			</m.div>
 		</Block>

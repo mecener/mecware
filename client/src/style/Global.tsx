@@ -34,6 +34,29 @@ const GlobalStyle = createGlobalStyle`
 			}
 		}
 	}
+
+	@media (pointer: fine) {
+		*::-webkit-scrollbar {
+			width: 10px;
+			background-color: ${palette.black[800]};
+
+			&-thumb {
+				background-color: ${palette.gray[100]};
+				border-radius: 4px;
+				border: 2px solid ${palette.black[800]};
+
+				@media (hover: hover) {
+					&:hover {
+						background-color: ${palette.gray[200]};
+					}
+				}
+
+				&:active {
+					background-color: ${palette.gray[500]};
+				}
+			}
+		}
+	}
 `;
 
 export default GlobalStyle;
