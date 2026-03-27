@@ -1,6 +1,6 @@
 import Block from "@/components/Primitives/Block";
 import { Icon } from "@/components/Primitives/Icon";
-import { Label } from "@/components/Primitives/Typography";
+import { Body, Label } from "@/components/Primitives/Typography";
 import { palette } from "@/style/colorPalette";
 import type { FC } from "react";
 import React, { useState } from "react";
@@ -8,6 +8,7 @@ import styled, { css } from "styled-components";
 import { AnimatePresence as AP, motion as m } from "framer-motion";
 import Flex from "@/components/Primitives/Flex";
 import Tooltip from "../UI/Tooltip";
+import { ErrorMessage } from "@/pages/Auth/Elements";
 
 /*
 	<Continue.Here/>
@@ -25,42 +26,44 @@ const transitions = {
 type InputTypes = "text" | "password" | "number";
 
 interface InputProps {
-	value: string;
-	onChange: (value: string) => void;
-	onBlur?: () => void;
+	required?: boolean;
 	type?: InputTypes;
-	hasError?: boolean;
-	errorMessage?: string;
 	canTogglePassword?: boolean;
-	tooltipMessage?: string;
+	value: string;
 	placeholder?: string;
 	icon?: React.FC;
+	onChange: (value: string) => void;
+	onBlur?: () => void;
+	hasError?: boolean;
+	errorMessage?: string;
+	tooltipMessage?: string;
+	info?: string;
 }
 
 const StyledInput = styled.input<{ $hasIcon: boolean }>`
 	border-radius: 8px;
-	height: 44px;
+	height: 46px;
 	background-color: ${palette.black[600]};
 	box-shadow:
 		inset 0 1px 0 0 ${palette.black[400]},
 		0 2px 0 0 ${palette.black[800]};
 	width: 320px;
-	padding: 0 16px 1px ${({ $hasIcon }) => ($hasIcon ? "46px" : "16px")};
+	padding: 0 16px 1px ${({ $hasIcon }) => ($hasIcon ? "50px" : "16px")};
 	color: ${palette.white[500]};
 	font-weight: 500;
-	font-size: 14px;
+	font-size: 16px;
 	transition: 199ms;
-	font-family: "Inter";
+	font-family: ${import.meta.env.VITE_PRIMARY_FONT};
 	outline: 2px solid transparent;
 	outline-offset: 2px;
 `;
 
 const IconContainer = styled.div<{ $right?: boolean; onClick?: () => void }>`
 	position: absolute;
-	width: 32px;
-	height: 32px;
+	width: 34px;
+	height: 34px;
 	text-align: center;
-	line-height: 32px;
+	line-height: 34px;
 	${({ $right }) => ($right ? "right: 6px" : "left: 6px")};
 	top: 50%;
 	translate: 0 -50%;
@@ -176,45 +179,32 @@ const InputContainer = styled(Block)<{ $hasFocus: boolean; $hasError?: boolean }
 		`}
 `;
 
-const ErrorMessage = styled(Block)`
-	margin: 4px 0 0 0;
-	background-color: rgba(252, 61, 61, 0.075);
-	border-radius: 8px;
-	padding: 8px 12px;
-	transition: 199ms;
-	box-shadow:
-		inset 0 1px 0 0 rgba(255, 153, 153, 0.1),
-		0 2px 0 0 rgba(221, 13, 13, 0.05);
-
-	&,
-	${Label.S} {
-		color: ${palette.error[500]};
-	}
-
-	svg {
-		width: 12px;
-	}
-
-	@media (hover: hover) and (pointer: fine) {
-		&:hover {
-			box-shadow:
-				inset 0 0px 0 0 rgba(255, 153, 153, 0.1),
-				0 1px 0 0 rgba(221, 13, 13, 0.05);
-		}
-	}
+const Placeholder = styled(Label.M)<{ $required?: boolean }>`
+	${({ $required }) =>
+		$required &&
+		css`
+			&::after {
+				content: " *";
+				color: ${palette.error[500]};
+				font-size: 14px;
+				line-height: calc(14px * 1.4);
+			}
+		`}
 `;
 
 const Input: FC<InputProps> = ({
-	value,
-	onChange,
-	onBlur,
+	required,
 	type = "text",
-	hasError,
 	canTogglePassword,
-	errorMessage,
-	tooltipMessage,
+	value,
 	placeholder,
 	icon,
+	onChange,
+	onBlur,
+	hasError,
+	errorMessage,
+	tooltipMessage,
+	info,
 }) => {
 	const [hasFocus, setFocus] = useState<boolean>(false);
 	const [inputType, setInputType] = useState<InputTypes>(type);
@@ -222,7 +212,11 @@ const Input: FC<InputProps> = ({
 
 	return (
 		<Block $relative $column $gap={8}>
-			{placeholder && <Label.S $color={palette.gray[900]}>{placeholder}</Label.S>}
+			{placeholder && (
+				<Placeholder $required={required} $color={palette.gray[900]}>
+					{placeholder}
+				</Placeholder>
+			)}
 			<InputContainer $hasError={hasError} $hasFocus={hasFocus} $relative>
 				<StyledInput
 					type={inputType}
@@ -246,19 +240,28 @@ const Input: FC<InputProps> = ({
 				{hasError && (
 					<m.div {...transitions}>
 						<ErrorMessage
-							$relative
 							onMouseEnter={() => setIsTooltipVisible(true)}
 							onMouseLeave={() => setIsTooltipVisible(false)}
+							message={errorMessage || ""}
 						>
-							<Flex $alignItems="center" $gap={4}>
-								<Icon.Error />
-								<Label.S>{errorMessage}</Label.S>
-							</Flex>
-							<AP>{isTooltipVisible && <Tooltip position={{ attach: "right", content: "top" }}>{tooltipMessage}</Tooltip>}</AP>
+							{tooltipMessage && (
+								<AP>
+									{isTooltipVisible && (
+										<Tooltip $maxWidth="200px" $side="right" $contentPlacement="start">
+											{tooltipMessage}
+										</Tooltip>
+									)}
+								</AP>
+							)}
 						</ErrorMessage>
 					</m.div>
 				)}
 			</AP>
+			{info && (
+				<Block $maxWidth="320px">
+					<Body.XS $color={palette.gray[900]}>{info}</Body.XS>
+				</Block>
+			)}
 		</Block>
 	);
 };

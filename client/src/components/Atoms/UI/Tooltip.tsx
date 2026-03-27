@@ -6,10 +6,9 @@ import { Body } from "@/components/Primitives/Typography";
 import { Icon } from "@/components/Primitives/Icon";
 
 interface TooltipProps {
-	position?: {
-		attach: "right" | "left" | "top" | "bottom";
-		content: "right" | "left" | "top" | "bottom";
-	};
+	$side?: "top" | "right" | "bottom" | "left";
+	$contentPlacement?: "start" | "center" | "end";
+	$maxWidth?: string;
 	children: React.ReactNode;
 }
 
@@ -25,25 +24,86 @@ const arrowTransitions = {
 	exit: { opacity: 0, x: 5 },
 };
 
-const StyledTooltip = styled(m.div)<{ $position?: TooltipProps["position"] }>`
+const StyledTooltip = styled(m.div)<Pick<TooltipProps, "$side" | "$contentPlacement" | "$maxWidth">>`
 	position: absolute;
 	z-index: 1;
-	top: -4px;
-	left: calc(100% + 12px);
+	${({ $side, $contentPlacement }) =>
+		$side &&
+		$contentPlacement &&
+		css`
+			${{
+				top: "bottom",
+				right: "left",
+				bottom: "top",
+				left: "right",
+			}[$side]}: calc(100% + 12px);
+			${{
+				start: () => (["top", "bottom"].includes($side) ? "left" : "top"),
+				center: () => (["top", "bottom"].includes($side) ? "left" : "top"),
+				end: () => (["top", "bottom"].includes($side) ? "right" : "bottom"),
+			}[$contentPlacement]}: ${["start", "end"].includes($contentPlacement) ? "-4px" : "50%"};
+			${$contentPlacement === "center" &&
+			css`
+				translate: ${["top", "bottom"].includes($side) ? "-50% 0" : "0 -50%"};
+			`}
+		`}
 	padding: 16px 20px;
 	border-radius: 8px;
 	background-color: #211414;
-	max-width: 200px;
+	max-width: ${({ $maxWidth }) => $maxWidth || "100%"};
 	width: 100%;
 `;
 
-const ArrowContainer = styled(m.div)`
+const getArrowRotate = (side: TooltipProps["$side"]): string => {
+	switch (side) {
+		case "top":
+			return "-90deg";
+		case "bottom":
+			return "90deg";
+		case "left":
+			return "180deg";
+		default:
+			return "0deg";
+	}
+};
+
+/*
+	<Continue.Here3>
+	= ure on the right path, bruh!
+	= in the end, we just need to link up the pointer
+	= with our positioning moment and all be gotta good.
+	= yeah, true, there's still one more thing...
+	= gotta figure something out with the tooltip sizes,
+	= but you're a legend, I know u will come up with something!
+	= Love u, man. Catch tomorrow! 26.03.2026 23:32, bye
+*/
+
+const ArrowContainer = styled(m.div)<Pick<TooltipProps, "$side" | "$contentPlacement">>`
 	position: absolute;
-	top: 50%;
-	translate: 0 -50%;
 	z-index: 0;
-	left: calc(100% + 4px);
 	color: #211414;
+
+	${({ $side, $contentPlacement }) =>
+		$side &&
+		$contentPlacement &&
+		css`
+			${{
+				top: "bottom",
+				right: "left",
+				bottom: "top",
+				left: "right",
+			}[$side]}: calc(100% + ${["top", "bottom"].includes($side) ? "2px" : "4px"});
+			${{
+				start: () => (["top", "bottom"].includes($side) ? "left" : "top"),
+				center: () => (["top", "bottom"].includes($side) ? "left" : "top"),
+				end: () => (["top", "bottom"].includes($side) ? "right" : "bottom"),
+			}[$contentPlacement]}: ${["start", "end"].includes($contentPlacement) ? "8px" : "50%"};
+			${$contentPlacement === "center" &&
+			css`
+				translate: ${["top", "bottom"].includes($side) ? "-50% 0" : "0 -50%"};
+			`}
+			rotate: ${getArrowRotate($side)};
+		`}
 
 	&,
 	svg {
@@ -52,13 +112,13 @@ const ArrowContainer = styled(m.div)`
 	}
 `;
 
-const Tooltip: FC<TooltipProps> = ({ position, children }) => {
+const Tooltip: FC<TooltipProps> = ({ children, ...props }) => {
 	return (
 		<>
-			<StyledTooltip $position={position} {...tooltipTransitions}>
+			<StyledTooltip {...props} {...tooltipTransitions}>
 				<Body.XS $color={palette.error[500]}>{children}</Body.XS>
 			</StyledTooltip>
-			<ArrowContainer {...arrowTransitions}>
+			<ArrowContainer {...props} {...arrowTransitions}>
 				<Icon.TooltipArrow />
 			</ArrowContainer>
 		</>
@@ -68,7 +128,7 @@ const Tooltip: FC<TooltipProps> = ({ position, children }) => {
 export default Tooltip;
 
 /*
-	<Continue.Here/>
+	<Continue.Here2/>
 	= ohh, bruh, I will think that fucking ToOlTiP component will be easy,
 	= but that's asshole will be so LARGE, HUGE AND MASSIVE, I want to kill him right now.
 	= We need make thing with him fucking PoSiTiOnInG, and him content,

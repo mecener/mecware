@@ -7,12 +7,15 @@ import Flex from "@/components/Primitives/Flex";
 import Input from "@/components/Atoms/Forms/Input";
 import Block from "@/components/Primitives/Block";
 import { useInput } from "@/hooks/useInput";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 const SignUp: FC = () => {
 	const email = useInput("", { isEmail: true });
 	const login = useInput("", {});
 	const password = useInput("", {});
+	const passwordConfirm = useInput("", {});
 	const [errorMessage, setErrorMessage] = useState<string>("");
+	useDocumentTitle("Sign Up");
 
 	const submitHandler = () => {
 		if (login.value.length === 0 || password.value.length === 0) {
@@ -33,29 +36,38 @@ const SignUp: FC = () => {
 			buttonIcon={<Icon.CreateAccount />}
 			onSubmit={submitHandler}
 			errorMessage={errorMessage}
+			disableButton={
+				email.value.length === 0 || login.value.length === 0 || password.value.length === 0 || passwordConfirm.value.length === 0
+			}
 			extra={
 				<Body.S>
 					Already have an account? <Link to="/signin">Sign in</Link>
 				</Body.S>
 			}
 		>
-			<Flex $column $gap={16}>
+			<Flex $column $gap={20}>
 				<Input
-					hasError={email.isDirty && !email.isEmailCorrect}
-					errorMessage="Email address is incorrect"
+					required
+					placeholder="Email address"
 					value={email.value}
+					icon={Icon.At}
 					onChange={email.onChange}
 					onBlur={email.onBlur}
-					icon={Icon.At}
-					placeholder="Email address"
+					hasError={email.isDirty && !email.isEmailCorrect}
+					errorMessage="Email address is incorrect"
 					tooltipMessage="Hmm, that doesn't look like a valid email. Try something like hello@example.com"
 				/>
 				<Input
-					hasError={errorMessage.length !== 0 && email.value.length === 0}
-					value={login.value}
-					onChange={login.onChange}
-					icon={Icon.User}
+					required
 					placeholder="Username"
+					value={login.value}
+					icon={Icon.User}
+					onChange={login.onChange}
+					onBlur={login.onBlur}
+					hasError={login.isDirty && !login.isInputValid}
+					errorMessage="Login is incorrect"
+					tooltipMessage=""
+					info="Username can contain only letters, numbers, dot and hyphens (but it cannot begin or end with them)."
 				/>
 				<Input
 					hasError={errorMessage.length !== 0 && password.value.length === 0}

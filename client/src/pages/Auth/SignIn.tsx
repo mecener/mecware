@@ -8,6 +8,7 @@ import { useInput } from "@/hooks/useInput";
 import styled from "styled-components";
 import Link from "@/components/Primitives/Link";
 import { AuthContainer } from "./Elements";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 const PasswordRecoverLink = styled.div`
 	position: absolute;
@@ -19,6 +20,7 @@ const SignIn: FC = () => {
 	const login = useInput("", {});
 	const password = useInput("", {});
 	const [errorMessage, setErrorMessage] = useState<string>("");
+	useDocumentTitle("Sign In");
 
 	const submitHandler = () => {
 		if (login.value.length === 0 || password.value.length === 0) {
@@ -34,20 +36,21 @@ const SignIn: FC = () => {
 			buttonText="Sign In"
 			buttonIcon={<Icon.Login />}
 			onSubmit={submitHandler}
-			errorMessage={errorMessage}
+			disableButton={login.value.length === 0 || password.value.length === 0}
 			extra={
 				<Body.S>
 					First time here? <Link to="/signup">Create an account</Link>
 				</Body.S>
 			}
 		>
-			<Flex $column $gap={16}>
+			<Flex $column $gap={20}>
 				<Input
 					hasError={errorMessage.length !== 0 && login.value.length === 0}
 					value={login.value}
 					onChange={login.onChange}
 					icon={Icon.User}
 					placeholder="Username or email address"
+					errorMessage="Username cannot be blank"
 				/>
 				<Block $relative>
 					<Input
@@ -57,6 +60,7 @@ const SignIn: FC = () => {
 						onChange={password.onChange}
 						icon={Icon.Lock}
 						placeholder="Password"
+						errorMessage="Password cannot be blank"
 						canTogglePassword
 					/>
 					<PasswordRecoverLink>

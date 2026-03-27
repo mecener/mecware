@@ -45,9 +45,12 @@ const ButtonBase = styled(Block).attrs({ as: "button" })<ButtonProps>`
 	${({ $isLoading }) => ($isLoading ? "pointer-events: none" : "")};
 
 	&:disabled {
-		color: ${palette.gray[300]};
 		pointer-events: none;
 		scale: 0.9;
+		opacity: 0.5;
+		box-shadow:
+			inset 0 0px 0 0 ${palette.primary[200]},
+			0 0px 0 0 ${palette.primary[900]};
 	}
 
 	@media (hover: hover) and (pointer: fine) {
@@ -76,7 +79,6 @@ interface ButtonVariantColor {
 		color: string;
 	};
 	active: string;
-	disabled: string;
 	loader: {
 		overlay: string;
 		baseColor: string;
@@ -98,10 +100,6 @@ const createButtonVariant = (colors: ButtonVariantColor) => {
 		&:active {
 			background-color: ${colors.active};
 		}
-
-		&:disabled {
-			background-color: ${colors.disabled};
-		}
 	`;
 };
 
@@ -116,7 +114,6 @@ const variantsConfig = {
 			color: palette.black[900],
 		},
 		active: palette.primary[700],
-		disabled: palette.primary[100],
 		loader: {
 			baseColor: palette.primary[500],
 			overlay: palette.primary[400],

@@ -64,7 +64,7 @@ export const Heading = {
 };
 
 const TitleBase = styled(TypographyBase)`
-	font-family: "Inter";
+	font-family: ${import.meta.env.VITE_PRIMARY_FONT};
 	font-weight: 500;
 	line-height: 1.4;
 `;
@@ -82,7 +82,7 @@ export const Title = {
 };
 
 const BodyBase = styled(TypographyBase)`
-	font-family: "Inter";
+	font-family: ${import.meta.env.VITE_PRIMARY_FONT};
 	font-weight: 400;
 	line-height: 1.7;
 
@@ -124,7 +124,7 @@ export const Body = {
 };
 
 const CaptionBase = styled(TypographyBase)`
-	font-family: "Inter";
+	font-family: ${import.meta.env.VITE_PRIMARY_FONT};
 	font-weight: 400;
 	line-height: 1.5;
 `;
@@ -139,7 +139,7 @@ export const Caption = {
 };
 
 const LabelBase = styled(TypographyBase).attrs({ as: "span" })`
-	font-family: "Inter";
+	font-family: ${import.meta.env.VITE_PRIMARY_FONT};
 	font-weight: 500;
 	line-height: 1.4;
 `;
@@ -157,7 +157,7 @@ export const Label = {
 };
 
 const OverlineBase = styled(TypographyBase)`
-	font-family: "Inter";
+	font-family: ${import.meta.env.VITE_PRIMARY_FONT};
 	text-transform: uppercase;
 	font-weight: 700;
 	line-height: 1.2;
