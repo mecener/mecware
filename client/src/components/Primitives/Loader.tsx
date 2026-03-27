@@ -31,7 +31,7 @@ const LoaderWrapper = styled(Block)<LoaderProps>`
 const LoaderBase = styled.div<LoaderProps>`
 	width: 16px;
 	height: 16px;
-	border: 4px solid ${({ $baseColor }) => $baseColor || palette.neutral[200]};
+	border: 4px solid ${({ $baseColor }) => $baseColor || palette.black[200]};
 	border-radius: 8px;
 
 	svg {

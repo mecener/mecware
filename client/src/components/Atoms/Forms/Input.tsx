@@ -6,9 +6,8 @@ import type { FC } from "react";
 import React, { useState } from "react";
 import styled, { css } from "styled-components";
 import { AnimatePresence as AP, motion as m } from "framer-motion";
-import Flex from "@/components/Primitives/Flex";
 import Tooltip from "../UI/Tooltip";
-import { ErrorMessage } from "@/pages/Auth/Elements";
+import { ErrorMessage, StrengthMeter } from "@/pages/Auth/Elements";
 
 /*
 	<Continue.Here/>
@@ -28,6 +27,7 @@ type InputTypes = "text" | "password" | "number";
 interface InputProps {
 	required?: boolean;
 	type?: InputTypes;
+	strengthMeter?: boolean;
 	canTogglePassword?: boolean;
 	value: string;
 	placeholder?: string;
@@ -54,8 +54,6 @@ const StyledInput = styled.input<{ $hasIcon: boolean }>`
 	font-size: 16px;
 	transition: 199ms;
 	font-family: ${import.meta.env.VITE_PRIMARY_FONT};
-	outline: 2px solid transparent;
-	outline-offset: 2px;
 `;
 
 const IconContainer = styled.div<{ $right?: boolean; onClick?: () => void }>`
@@ -64,7 +62,7 @@ const IconContainer = styled.div<{ $right?: boolean; onClick?: () => void }>`
 	height: 34px;
 	text-align: center;
 	line-height: 34px;
-	${({ $right }) => ($right ? "right: 6px" : "left: 6px")};
+	${({ $right }) => ($right ? "right: 10px" : "left: 10px")};
 	top: 50%;
 	translate: 0 -50%;
 	color: ${palette.gray[900]};
@@ -107,6 +105,8 @@ const IconContainer = styled.div<{ $right?: boolean; onClick?: () => void }>`
 `;
 
 const InputContainer = styled(Block)<{ $hasFocus: boolean; $hasError?: boolean }>`
+	transition: 199ms;
+
 	@media (hover: hover) and (pointer: fine) {
 		&:hover {
 			${StyledInput} {
@@ -127,17 +127,20 @@ const InputContainer = styled(Block)<{ $hasFocus: boolean; $hasError?: boolean }
 	${({ $hasFocus }) =>
 		$hasFocus &&
 		css`
+			border-color: ${palette.black[600]};
+
 			${StyledInput} {
 				box-shadow:
 					inset 0 0px 0 0 ${palette.black[400]},
 					0 0px 0 0 ${palette.black[800]};
-				outline-color: ${palette.black[600]};
 			}
+
 			${IconContainer} {
 				&:first-of-type {
 					color: ${palette.primary[500]};
 				}
 			}
+
 			&:hover {
 				${StyledInput} {
 					border-color: ${palette.primary[500]};
@@ -145,6 +148,7 @@ const InputContainer = styled(Block)<{ $hasFocus: boolean; $hasError?: boolean }
 						inset 0 0px 0 0 ${palette.black[400]},
 						0 0px 0 0 ${palette.black[800]};
 				}
+
 				${IconContainer} {
 					&:first-of-type {
 						color: ${palette.primary[500]};
@@ -159,14 +163,14 @@ const InputContainer = styled(Block)<{ $hasFocus: boolean; $hasError?: boolean }
 	${({ $hasError }) =>
 		$hasError &&
 		css`
-			${StyledInput} {
-				outline-color: ${palette.error[500]};
-			}
+			border-color: ${palette.error[500]};
+
 			${IconContainer} {
 				&:first-of-type {
 					color: ${palette.error[500]};
 				}
 			}
+
 			@media (hover: hover) and (pointer: fine) {
 				&:hover {
 					${IconContainer} {
@@ -195,6 +199,7 @@ const Placeholder = styled(Label.M)<{ $required?: boolean }>`
 const Input: FC<InputProps> = ({
 	required,
 	type = "text",
+	strengthMeter,
 	canTogglePassword,
 	value,
 	placeholder,
@@ -213,11 +218,19 @@ const Input: FC<InputProps> = ({
 	return (
 		<Block $relative $column $gap={8}>
 			{placeholder && (
-				<Placeholder $required={required} $color={palette.gray[900]}>
+				<Placeholder $required={required} $color={palette.white[900]}>
 					{placeholder}
 				</Placeholder>
 			)}
-			<InputContainer $hasError={hasError} $hasFocus={hasFocus} $relative>
+			<InputContainer
+				$borderRadius={12}
+				$padding="2px"
+				$margin="-4px"
+				$border={"2px solid transparent"}
+				$hasError={hasError}
+				$hasFocus={hasFocus}
+				$relative
+			>
 				<StyledInput
 					type={inputType}
 					value={value}
@@ -259,9 +272,10 @@ const Input: FC<InputProps> = ({
 			</AP>
 			{info && (
 				<Block $maxWidth="320px">
-					<Body.XS $color={palette.gray[900]}>{info}</Body.XS>
+					<Body.XS $color={palette.gray[600]}>{info}</Body.XS>
 				</Block>
 			)}
+			{strengthMeter && <StrengthMeter value={value} />}
 		</Block>
 	);
 };

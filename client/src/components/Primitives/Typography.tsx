@@ -84,7 +84,7 @@ export const Title = {
 const BodyBase = styled(TypographyBase)`
 	font-family: ${import.meta.env.VITE_PRIMARY_FONT};
 	font-weight: 400;
-	line-height: 1.7;
+	line-height: 1.6;
 
 	strong {
 		font-weight: 700;

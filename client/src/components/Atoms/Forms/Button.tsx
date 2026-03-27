@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import Block from "../../Primitives/Block";
 import { Label } from "../../Primitives/Typography";
 import { palette } from "@/style/colorPalette";
@@ -42,7 +42,15 @@ const ButtonBase = styled(Block).attrs({ as: "button" })<ButtonProps>`
 		}};
 	}
 
-	${({ $isLoading }) => ($isLoading ? "pointer-events: none" : "")};
+	${({ $isLoading }) =>
+		$isLoading
+			? css`
+					box-shadow:
+						inset 0 0px 0 0 ${palette.primary[200]},
+						0 0px 0 0 ${palette.primary[900]};
+					pointer-events: none;
+				`
+			: ""};
 
 	&:disabled {
 		pointer-events: none;
@@ -115,8 +123,8 @@ const variantsConfig = {
 		},
 		active: palette.primary[700],
 		loader: {
-			baseColor: palette.primary[500],
-			overlay: palette.primary[400],
+			baseColor: palette.primary[900],
+			overlay: palette.primary[500],
 		},
 	},
 	/* Default: {

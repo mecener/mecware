@@ -34,8 +34,8 @@ export const useValidation = (value: string, validations: IValidation): UseValid
 		const isEmailCorrect = validations.isEmail ? EMAIL_REGEX.test(value) : true;
 		const passwordChecks = validations.isPassword
 			? {
-					isContainUpperCase: /[A-ZА-Я]/g.test(value),
-					isContainLowerCase: /[a-zа-я]/g.test(value),
+					isContainUpperCase: /[A-Z]/g.test(value),
+					isContainLowerCase: /[a-z]/g.test(value),
 					isContainSpecial: /[!@#$%^&.,*()\-_+=~]/g.test(value),
 					isContainDigit: /\d/g.test(value),
 					isLengthCorrect,

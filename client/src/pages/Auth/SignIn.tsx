@@ -20,6 +20,7 @@ const SignIn: FC = () => {
 	const login = useInput("", {});
 	const password = useInput("", {});
 	const [errorMessage, setErrorMessage] = useState<string>("");
+	const [loading, setLoading] = useState<boolean>(false);
 	useDocumentTitle("Sign In");
 
 	const submitHandler = () => {
@@ -28,6 +29,12 @@ const SignIn: FC = () => {
 		} else {
 			setErrorMessage("");
 		}
+
+		setLoading(true);
+
+		setTimeout(() => {
+			setLoading(false);
+		}, 2000);
 	};
 
 	return (
@@ -37,6 +44,7 @@ const SignIn: FC = () => {
 			buttonIcon={<Icon.Login />}
 			onSubmit={submitHandler}
 			disableButton={login.value.length === 0 || password.value.length === 0}
+			loading={loading}
 			extra={
 				<Body.S>
 					First time here? <Link to="/signup">Create an account</Link>
