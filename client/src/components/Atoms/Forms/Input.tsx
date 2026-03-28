@@ -38,6 +38,7 @@ interface InputProps {
 	errorMessage?: string;
 	tooltipMessage?: string;
 	info?: string;
+	isDirty?: boolean;
 }
 
 const StyledInput = styled.input<{ $hasIcon: boolean }>`
@@ -56,7 +57,7 @@ const StyledInput = styled.input<{ $hasIcon: boolean }>`
 	font-family: ${import.meta.env.VITE_PRIMARY_FONT};
 `;
 
-const IconContainer = styled.div<{ $right?: boolean; onClick?: () => void }>`
+const IconContainer = styled.div<{ $right?: boolean; $highlight?: boolean; onClick?: () => void }>`
 	position: absolute;
 	width: 34px;
 	height: 34px;
@@ -102,6 +103,12 @@ const IconContainer = styled.div<{ $right?: boolean; onClick?: () => void }>`
 			: css`
 					pointer-events: none;
 				`}
+
+	${({ $highlight }) =>
+		$highlight &&
+		css`
+			color: ${palette.correct[500]};
+		`}
 `;
 
 const InputContainer = styled(Block)<{ $hasFocus: boolean; $hasError?: boolean }>`
@@ -210,6 +217,7 @@ const Input: FC<InputProps> = ({
 	errorMessage,
 	tooltipMessage,
 	info,
+	isDirty,
 }) => {
 	const [hasFocus, setFocus] = useState<boolean>(false);
 	const [inputType, setInputType] = useState<InputTypes>(type);
@@ -242,7 +250,7 @@ const Input: FC<InputProps> = ({
 					onFocus={() => setFocus(true)}
 					$hasIcon={!!icon}
 				/>
-				{icon && <IconContainer>{React.createElement(icon)}</IconContainer>}
+				{icon && <IconContainer $highlight={isDirty && !hasError}>{React.createElement(icon)}</IconContainer>}
 				{type === "password" && canTogglePassword && (
 					<IconContainer onClick={() => setInputType(inputType === "text" ? "password" : "text")} $right>
 						{inputType === "password" ? <Icon.Visibility /> : <Icon.VisibilityOff />}

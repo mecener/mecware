@@ -159,10 +159,10 @@ export const StrengthMeter: FC<StergthMeterProps> = ({ value }) => {
 				setStrengthColor(palette.progress[500]);
 				break;
 			case 4:
-				setStrengthColor("#76F53B");
+				setStrengthColor(palette.correct[500]);
 				break;
 			case 5:
-				setStrengthColor(palette.correct[500]);
+				setStrengthColor(palette.primary[500]);
 				break;
 			default:
 				setStrengthColor(palette.gray[700]);

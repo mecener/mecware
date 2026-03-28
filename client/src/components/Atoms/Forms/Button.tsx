@@ -6,7 +6,7 @@ import { AnimatePresence as AP, motion as m } from "framer-motion";
 import Loader from "../../Primitives/Loader";
 
 interface ButtonProps {
-	$fit?: boolean;
+	$fill?: boolean;
 	$icon?: React.ReactNode;
 	$iconPlacement?: "right" | "left";
 	$isLoading?: boolean;
@@ -16,13 +16,9 @@ interface ButtonProps {
 }
 
 const ButtonBase = styled(Block).attrs({ as: "button" })<ButtonProps>`
-	${({ $fit }) => ($fit ? "flex: 1 1 auto" : "")};
+	${({ $fill }) => ($fill ? "flex: 1 1 auto" : "")};
 	position: relative;
 	height: 44px;
-
-	box-shadow:
-		inset 0 1px 0 0 ${palette.primary[200]},
-		0 2px 0 0 ${palette.primary[900]};
 
 	overflow: hidden;
 	user-select: none;
@@ -45,9 +41,6 @@ const ButtonBase = styled(Block).attrs({ as: "button" })<ButtonProps>`
 	${({ $isLoading }) =>
 		$isLoading
 			? css`
-					box-shadow:
-						inset 0 0px 0 0 ${palette.primary[200]},
-						0 0px 0 0 ${palette.primary[900]};
 					pointer-events: none;
 				`
 			: ""};
@@ -56,24 +49,10 @@ const ButtonBase = styled(Block).attrs({ as: "button" })<ButtonProps>`
 		pointer-events: none;
 		scale: 0.9;
 		opacity: 0.5;
-		box-shadow:
-			inset 0 0px 0 0 ${palette.primary[200]},
-			0 0px 0 0 ${palette.primary[900]};
-	}
-
-	@media (hover: hover) and (pointer: fine) {
-		&:hover {
-			box-shadow:
-				inset 0 0px 0 0 ${palette.primary[200]},
-				0 2px 0 0 ${palette.primary[900]};
-		}
 	}
 
 	&:active {
 		translate: 0 2px;
-		box-shadow:
-			inset 0 0px 0 0 ${palette.primary[200]},
-			0 0px 0 0 ${palette.primary[900]};
 	}
 `;
 
@@ -81,6 +60,10 @@ interface ButtonVariantColor {
 	default: {
 		background: string;
 		color: string;
+		boxShadow: {
+			inset: string;
+			outset: string;
+		};
 	};
 	hover: {
 		background: string;
@@ -90,6 +73,7 @@ interface ButtonVariantColor {
 	loader: {
 		overlay: string;
 		baseColor: string;
+		color: string;
 	};
 }
 
@@ -97,25 +81,58 @@ const createButtonVariant = (colors: ButtonVariantColor) => {
 	return styled(ButtonBase)`
 		background-color: ${colors.default.background};
 		color: ${colors.default.color};
+		box-shadow:
+			inset 0 1px 0 0 ${colors.default.boxShadow.inset},
+			0 2px 0 0 ${colors.default.boxShadow.outset};
 
 		@media (hover: hover) and (pointer: fine) {
 			&:hover {
 				background-color: ${colors.hover.background};
 				color: ${colors.hover.color};
+				box-shadow:
+					inset 0 0px 0 0 ${colors.default.boxShadow.inset},
+					0 2px 0 0 ${colors.default.boxShadow.outset};
 			}
 		}
 
 		&:active {
 			background-color: ${colors.active};
+			box-shadow:
+				inset 0 0px 0 0 ${colors.default.boxShadow.inset},
+				0 0px 0 0 ${colors.default.boxShadow.outset};
 		}
+
+		&:disabled {
+			box-shadow:
+				inset 0 0px 0 0 ${colors.default.boxShadow.inset},
+				0 0px 0 0 ${colors.default.boxShadow.outset};
+		}
+
+		${({ $isLoading }) =>
+			$isLoading &&
+			css`
+				box-shadow:
+					inset 0 0px 0 0 ${colors.default.boxShadow.inset},
+					0 0px 0 0 ${colors.default.boxShadow.outset};
+			`}
 	`;
 };
+
+/*
+	<Continue.Here5/>
+	= there's good, don't forget complete button styles
+	= 28.03.2026 06:02
+*/
 
 const variantsConfig = {
 	Primary: {
 		default: {
 			background: palette.primary[500],
 			color: palette.black[900],
+			boxShadow: {
+				inset: palette.primary[200],
+				outset: palette.primary[900],
+			},
 		},
 		hover: {
 			background: palette.primary[600],
@@ -125,66 +142,76 @@ const variantsConfig = {
 		loader: {
 			baseColor: palette.primary[900],
 			overlay: palette.primary[500],
+			color: palette.black[900],
 		},
 	},
-	/* Default: {
+	Default: {
 		default: {
-			background: palette.neutral[50],
-			color: palette.neutral[900],
+			background: palette.black[600],
+			color: palette.white[100],
+			boxShadow: {
+				inset: palette.black[400],
+				outset: palette.black[800],
+			},
 		},
 		hover: {
-			background: palette.neutral[100],
-			color: palette.neutral[900],
+			background: palette.black[600],
+			color: palette.white[100],
 		},
-		active: palette.neutral[200],
-		focus: palette.neutral[200],
-		disabled: palette.neutral[100],
+		active: palette.black[500],
 		loader: {
-			baseColor: palette.neutral[200],
-			overlay: palette.neutral[50],
+			baseColor: palette.black[400],
+			overlay: palette.black[700],
+			color: palette.white[100],
 		},
 	},
 	Success: {
 		default: {
-			background: palette.accent.success[300],
-			color: palette.neutral[900],
+			background: palette.correct[500],
+			color: palette.black[900],
+			boxShadow: {
+				inset: palette.correct[300],
+				outset: palette.correct[900],
+			},
 		},
 		hover: {
-			background: palette.accent.success[400],
-			color: palette.neutral[900],
+			background: palette.correct[600],
+			color: palette.black[900],
 		},
-		active: palette.accent.success[500],
-		focus: palette.accent.success[200],
-		disabled: palette.accent.success[100],
+		active: palette.correct[700],
 		loader: {
-			baseColor: palette.accent.success[500],
-			overlay: palette.accent.success[300],
+			baseColor: palette.correct[900],
+			overlay: palette.correct[500],
+			color: palette.black[900],
 		},
 	},
 	Error: {
 		default: {
-			background: palette.accent.error[300],
-			color: palette.neutral[900],
+			background: palette.error[500],
+			color: palette.black[900],
+			boxShadow: {
+				inset: palette.error[300],
+				outset: palette.error[900],
+			},
 		},
 		hover: {
-			background: palette.accent.error[400],
-			color: palette.neutral[900],
+			background: palette.error[600],
+			color: palette.black[900],
 		},
-		active: palette.accent.error[500],
-		focus: palette.accent.error[200],
-		disabled: palette.accent.error[100],
+		active: palette.error[700],
 		loader: {
-			baseColor: palette.accent.error[500],
-			overlay: palette.accent.error[300],
+			baseColor: palette.error[900],
+			overlay: palette.error[500],
+			color: palette.black[900],
 		},
-	}, */
+	},
 };
 
 const variants = {
 	Primary: createButtonVariant(variantsConfig.Primary),
-	/* Default: createButtonVariant(variantsConfig.Default),
+	Default: createButtonVariant(variantsConfig.Default),
 	Success: createButtonVariant(variantsConfig.Success),
-	Error: createButtonVariant(variantsConfig.Error), */
+	Error: createButtonVariant(variantsConfig.Error),
 };
 
 const transitions = {
@@ -205,20 +232,21 @@ export const Button = Object.fromEntries(
 					$iconPlacement={$iconPlacement}
 					$alignItems="center"
 					$justifyContent="center"
-					$padding={[0, 24]}
+					$padding={[0, $icon && !children ? 15 : 24]}
 					$borderRadius={8}
 					$isLoading={$isLoading}
 					$reverse={$iconPlacement === "right"}
 					{...props}
 				>
 					{$icon}
-					<Label.M>{children}</Label.M>
+					{children && <Label.M>{children}</Label.M>}
 					<AP>
 						{$isLoading && (
 							<m.div {...transitions}>
 								<Loader
 									$overlay={variantsConfig[key as keyof typeof variantsConfig].loader.overlay}
 									$baseColor={variantsConfig[key as keyof typeof variantsConfig].loader.baseColor}
+									$color={variantsConfig[key as keyof typeof variantsConfig].loader.color}
 								/>
 							</m.div>
 						)}

@@ -56,6 +56,7 @@ const SignUp: FC = () => {
 					hasError={email.isDirty && !email.isEmailCorrect}
 					errorMessage={email.value.length === 0 ? "Email address cannot be blank" : "Email address is incorrect"}
 					tooltipMessage="Hmm, that doesn't look like a valid email. Try something like hello@example.com"
+					isDirty={email.isDirty}
 				/>
 				<Input
 					required
@@ -77,6 +78,7 @@ const SignUp: FC = () => {
 									: "Unknown error"
 					}
 					info="Username can contain only letters, numbers, dot and hyphens (but it cannot begin or end with them). "
+					isDirty={login.isDirty}
 				/>
 				<Input
 					required
@@ -91,6 +93,7 @@ const SignUp: FC = () => {
 					hasError={password.isDirty && !password.isInputValid}
 					errorMessage={password.value.length === 0 ? "Password cannot be blank" : "Password is too short"}
 					info="The password must be at least 8 characters long."
+					isDirty={password.isDirty}
 				/>
 				<Input
 					required
@@ -103,6 +106,7 @@ const SignUp: FC = () => {
 					onBlur={passwordConfirm.onBlur}
 					hasError={passwordConfirm.isDirty && password.value !== passwordConfirm.value}
 					errorMessage="Passwords must match"
+					isDirty={passwordConfirm.isDirty}
 				/>
 			</Flex>
 		</AuthContainer>

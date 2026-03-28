@@ -7,6 +7,7 @@ import { palette } from "@/style/colorPalette";
 
 interface LoaderProps {
 	$overlay?: string;
+	$color?: string;
 	$baseColor?: string;
 }
 
@@ -33,6 +34,7 @@ const LoaderBase = styled.div<LoaderProps>`
 	height: 16px;
 	border: 4px solid ${({ $baseColor }) => $baseColor || palette.black[200]};
 	border-radius: 8px;
+	color: ${({ $color }) => $color || "black"};
 
 	svg {
 		width: 20px;
@@ -42,6 +44,10 @@ const LoaderBase = styled.div<LoaderProps>`
 		left: 50%;
 		translate: -50% -50%;
 		animation: rotate 1s linear infinite;
+
+		path {
+			stroke: currentColor;
+		}
 	}
 
 	@keyframes rotate {
