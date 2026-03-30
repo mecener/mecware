@@ -9,7 +9,6 @@ import styled from "styled-components";
 import Link from "@/components/Primitives/Link";
 import { AuthContainer } from "./Elements";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
-import { Button } from "@/components/Atoms/Forms/Button";
 
 const PasswordRecoverLink = styled.div`
 	position: absolute;
